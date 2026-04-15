@@ -1,0 +1,83 @@
+version: 2
+
+sources:
+  - name: oltp
+    description: "Transactional source schema loaded into DuckDB"
+    schema: oltp
+
+    tables:
+      - name: customer
+        description: "Customer source table"
+        columns:
+          - name: customer_id
+            description: "Primary key of customer"
+            data_tests:
+              - not_null
+              
+
+      - name: supplier
+        description: Supplier source table"
+        columns:
+          - name: supplier_id
+            description: "Primary key of supplier"
+            data_tests:
+              - not_null
+              
+
+      - name: product
+        description: "Product source table"
+        columns:
+          - name: product_id
+            description: "Primary key of product"
+            data_tests:
+              - not_null
+              
+          - name: supplier_id
+            description: "Foreign key to supplier"
+            data_tests:
+              - not_null
+          - name: unit_price
+            data_tests:
+              - not_null
+
+      - name: orders
+        description: "Order header source table"
+        columns:
+          - name: order_id
+            description: "Primary key of order"
+            data_tests:
+              - not_null
+              
+          - name: customer_id
+            description: "Foreign key to customer"
+            data_tests:
+              - not_null
+          - name: order_date
+            data_tests:
+              - not_null
+          - name: total_amount
+            data_tests:
+              - not_null
+
+      - name: order_item
+        description: "Order line source table"
+        columns:
+          - name: order_item_id
+            description: "Primary key of order item"
+            data_tests:
+              - not_null
+              
+          - name: order_id
+            description: "Foreign key to orders"
+            data_tests:
+              - not_null
+          - name: product_id
+            description: "Foreign key to product"
+            data_tests:
+              - not_null
+          - name: quantity
+            data_tests:
+              - not_null
+          - name: unit_price
+            data_tests:
+              - not_null

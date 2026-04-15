@@ -1,0 +1,116 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Customer dimension"
+    columns:
+      - name: customer_id
+        description: "Primary key of customer dimension"
+        data_tests:
+          - not_null
+          - unique
+
+  - name: dim_supplier
+    description: "Supplier dimension"
+    columns:
+      - name: supplier_id
+        description: "Primary key of supplier dimension"
+        data_tests:
+          - not_null
+          - unique
+
+  - name: dim_product
+    description: "Product dimension"
+    columns:
+      - name: product_id
+        description: "Primary key of product dimension"
+        data_tests:
+          - not_null
+          - unique
+      - name: supplier_id
+        description: "Foreign key to supplier dimension"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_supplier')
+              field: supplier_id
+
+  - name: dim_date
+    description: "Date dimension derived from order dates"
+    columns:
+      - name: date_key
+        description: "Surrogate date key in YYYYMMDD format"
+        data_tests:
+          - not_null
+          - unique
+      - name: date_day
+        description: "Calendar date"
+        data_tests:
+          - not_null
+          - unique
+
+  - name: fact_sales
+    description: "Sales fact table at order-item grain"
+    columns:
+      - name: sales_key
+        description: "Primary key of fact table, sourced from order_item_id"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: "Order identifier"
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        description: "Foreign key to customer dimension"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+
+      - name: product_id
+        description: "Foreign key to product dimension"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: supplier_id
+        description: "Foreign key to supplier dimension"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_supplier')
+              field: supplier_id
+
+      - name: date_key
+        description: "Foreign key to date dimension"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: quantity
+        description: "Quantity sold"
+        data_tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price at order line level"
+        data_tests:
+          - not_null
+
+      - name: line_amount
+        description: "Quantity multiplied by unit price"
+        data_tests:
+          - not_null
+
+      - name: order_total_amount
+        description: "Total amount of the order header"
+        data_tests:
+          - not_null
